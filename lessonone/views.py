@@ -96,3 +96,4 @@ def ffoorr(request):
 # фильтр дата
 def date(request):
     return render(request, "filter.html", context={"my_date": datetime.now()})
+

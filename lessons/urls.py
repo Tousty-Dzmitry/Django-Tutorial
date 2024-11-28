@@ -51,4 +51,5 @@ urlpatterns = [
     path("ffoorr/", views.ffoorr),
     path("date/", views.date),
 
+
 ]
