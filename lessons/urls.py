@@ -29,8 +29,11 @@ from lessonone import views
 # Чтобы эти функции сопоставлялись с запросами, надо определить для них маршруты в проекте в файле urls.py
 
 
-
 urlpatterns = [
+
+
+
+
     #получение информации о запросе
     path('index', views.index),
     # Ее преимущесто состоит в том, что она
@@ -50,6 +53,7 @@ urlpatterns = [
     path("ifelse/", views.ifelse),
     path("ffoorr/", views.ffoorr),
     path("date/", views.date),
-
-
+    path("formindex", views.formindex),
+    path("postuser/", views.postuser),
+    path("form/", views.form),
 ]

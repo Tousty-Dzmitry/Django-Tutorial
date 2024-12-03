@@ -17,6 +17,9 @@ from django.template.response import TemplateResponse
 
 from datetime import datetime
 
+from .forms import UserForm
+
+
 # пример отправки простого текста
 # def index(request):
 #     return HttpResponse("Главная")
@@ -28,6 +31,7 @@ from datetime import datetime
 #
 # def contact(request):
 #     return HttpResponse("Контакты")
+
 
 
 
@@ -96,4 +100,77 @@ def ffoorr(request):
 # фильтр дата
 def date(request):
     return render(request, "filter.html", context={"my_date": datetime.now()})
+
+# формы для получения данных
+
+def formindex(request):
+    return render(request, "formindex.html")
+
+
+def postuser(request):
+    # получаем из данных запроса POST отправленные через форму данные
+    name = request.POST.get("name", "Undefined")
+    age = request.POST.get("age", 1)
+    return HttpResponse(f"<h2>Name: {name}  Age: {age}</h2>")
+
+
+# джанго формы
+
+def form(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        age = request.POST.get("age")
+        return HttpResponse(f"<h2>Привет, {name}, твой возраст: {age}</h2>")
+    else:
+        userform = UserForm()
+        return render(request, "form.html", {"form": userform})
+
+
+#  четыре представления для получения, сохранения, редактирования и удаления данных
+
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponseNotFound
+from .models import Person
+
+
+# получение данных из бд
+def index(request):
+    people = Person.objects.all()
+    return render(request, "index.html", {"people": people})
+
+
+# сохранение данных в бд
+def create(request):
+    if request.method == "POST":
+        person = Person()
+        person.name = request.POST.get("name")
+        person.age = request.POST.get("age")
+        person.save()
+    return HttpResponseRedirect("/")
+
+
+# изменение данных в бд
+def edit(request, id):
+    try:
+        person = Person.objects.get(id=id)
+
+        if request.method == "POST":
+            person.name = request.POST.get("name")
+            person.age = request.POST.get("age")
+            person.save()
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, "edit.html", {"person": person})
+    except Person.DoesNotExist:
+        return HttpResponseNotFound("<h2>Person not found</h2>")
+
+
+# удаление данных из бд
+def delete(request, id):
+    try:
+        person = Person.objects.get(id=id)
+        person.delete()
+        return HttpResponseRedirect("/")
+    except Person.DoesNotExist:
+        return HttpResponseNotFound("<h2>Person not found</h2>")
 
